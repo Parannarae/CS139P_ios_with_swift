@@ -11,25 +11,28 @@ import UIKit
 class ViewController: UIViewController
 {
     // add 1 to round up for the odd number of cards
-    // lazy does not initialized before someone use it -> but no property observer can be lazy
-    lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+    // - lazy does not initialized before someone use it -> but no property observer can be lazy
+    // - usually model can be public, but below game should be private since numberOfParsOfcards is tied to our UI
+    private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
     
+    // this variable should be private(set) but since there is only getter, it leaves to be public
     var numberOfPairsOfCards: Int {
         // if it is read only, a `get` keyword can be ignored
         return (cardButtons.count + 1) / 2
     }
     
-    var flipCount = 0 {
+    private(set) var flipCount = 0 {
         didSet {
             flipCountLabel.text = "Flips: \(flipCount)"
         }
     }
   
-    @IBOutlet weak var flipCountLabel: UILabel!
+    // Outlet or Action always needs to be private
+    @IBOutlet private weak var flipCountLabel: UILabel!
     
-    @IBOutlet var cardButtons: [UIButton]!
+    @IBOutlet private var cardButtons: [UIButton]!
     
-    @IBAction func touchCard(_ sender: UIButton) {
+    @IBAction private func touchCard(_ sender: UIButton) {
         flipCount += 1
         if let cardNumber  = cardButtons.firstIndex(of: sender) {
             game.chooseCard(at: cardNumber)
@@ -40,7 +43,8 @@ class ViewController: UIViewController
         
     }
     
-    func updateViewFromModel() {
+    // updating model is an internal implementation (private)
+    private func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game.cards[index]
@@ -55,20 +59,16 @@ class ViewController: UIViewController
         }
     }
     
-    var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
+    private var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
     
     // dictionary Dictionary<Int, String>
-    var emoji = [Int: String]()
+    private var emoji = [Int: String]()
     
-    func emoji(for card: Card) -> String {
+    private func emoji(for card: Card) -> String {
         // switft use comma to `and` if conditions
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {
-            // pseudo random number generator (exclude upper bound)
-            // need to convert int to unsigned int
-            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
-            
             // do not allow duplicate
-            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+            emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4random)
             
         }
         
@@ -84,4 +84,17 @@ class ViewController: UIViewController
     
 }
 
-
+extension Int {
+    // pseudo random number generator (exclude upper bound)
+    // need to convert int to unsigned int
+    var arc4random: Int {
+        if self > 0 {
+            return Int(arc4random_uniform(UInt32(self)))
+        // deal with edge cases
+        } else if self < 0 {
+            return -Int(arc4random_uniform(UInt32(abs(self))))
+        } else {
+            return 0
+        }
+    }
+}

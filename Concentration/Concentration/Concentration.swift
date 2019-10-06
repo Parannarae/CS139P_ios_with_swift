@@ -10,11 +10,12 @@ import Foundation
 
 class Concentration
 {
-    var cards = [Card]()
+    // getter needs to be public to show in UI, but setter should be internal work
+    private(set) var cards = [Card]()
     
     // to check the status of current game
     // optional to make the case when there is no card is opened yet
-    var indexOfOneAndOnlyFaceUpCard: Int? {
+    private var indexOfOneAndOnlyFaceUpCard: Int? {
         get {
             var foundIndex: Int?
             for index in cards.indices {
@@ -39,6 +40,9 @@ class Concentration
     }
     
     func chooseCard(at index: Int) {
+        // it crashed in development, but not in production
+        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index)): chosen index not in the cards")
+        
         // ignore card if it is already matched
         if !cards[index].isMatched {
             // second card is chosen
@@ -65,6 +69,7 @@ class Concentration
     }
     
     init(numberOfPairsOfCards: Int) {
+        assert(numberOfPairsOfCards > 0, "Concentration.init(\(numberOfPairsOfCards)): you must have at least one pair of cards")
         // countable range: `..<` = exclude last, `...` = include last
         for _ in 0..<numberOfPairsOfCards { // `_` means ignore it
             let card = Card()
