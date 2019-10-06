@@ -14,13 +14,35 @@ class Concentration
     
     // to check the status of current game
     // optional to make the case when there is no card is opened yet
-    var indexOfOneAndOnlyFaceUpcard: Int?
+    var indexOfOneAndOnlyFaceUpCard: Int? {
+        get {
+            var foundIndex: Int?
+            for index in cards.indices {
+                if cards[index].isFaceUp {
+                    if foundIndex == nil {
+                        // no card is flipped yet
+                        foundIndex = index
+                    } else {
+                        // this is the second flipped card
+                        return nil
+                    }
+                }
+            }
+            return foundIndex
+        }
+        set {
+            // if no argument is given, `newValue` is a default argument name
+            for index in cards.indices {
+                cards[index].isFaceUp = (index == newValue)
+            }
+        }
+    }
     
     func chooseCard(at index: Int) {
         // ignore card if it is already matched
         if !cards[index].isMatched {
             // second card is chosen
-            if let matchIndex = indexOfOneAndOnlyFaceUpcard, matchIndex != index {
+            if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
                 // check if cards match
                 if cards[matchIndex].identifier == cards[index].identifier {
                     cards[matchIndex].isMatched = true
@@ -28,14 +50,16 @@ class Concentration
                 }
                 // open up the card and reset the previously opened card
                 cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpcard = nil
+                // this has done in getter
+//                indexOfOneAndOnlyFaceUpcard = nil
             } else {
-                // either no cards or 2 cards are face up
-                for flipDownIndex in cards.indices {
-                    cards[flipDownIndex].isFaceUp = false
-                }
-                cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpcard = index
+                // this has done in setter
+//                // either no cards or 2 cards are face up
+//                for flipDownIndex in cards.indices {
+//                    cards[flipDownIndex].isFaceUp = false
+//                }
+//                cards[index].isFaceUp = true
+                indexOfOneAndOnlyFaceUpCard = index
             }
         }
     }

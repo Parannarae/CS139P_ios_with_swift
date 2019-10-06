@@ -12,7 +12,12 @@ class ViewController: UIViewController
 {
     // add 1 to round up for the odd number of cards
     // lazy does not initialized before someone use it -> but no property observer can be lazy
-    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1 / 2))
+    lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+    
+    var numberOfPairsOfCards: Int {
+        // if it is read only, a `get` keyword can be ignored
+        return (cardButtons.count + 1) / 2
+    }
     
     var flipCount = 0 {
         didSet {
