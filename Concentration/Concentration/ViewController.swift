@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController
 {
     // add 1 to round up for the odd number of cards
-    // lazy does not initialized before someone use it -> but no property observer
+    // lazy does not initialized before someone use it -> but no property observer can be lazy
     lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1 / 2))
     
     var flipCount = 0 {
@@ -50,13 +50,13 @@ class ViewController: UIViewController
         }
     }
     
-    var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎"]
+    var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
     
     // dictionary Dictionary<Int, String>
     var emoji = [Int: String]()
     
     func emoji(for card: Card) -> String {
-        // switft use comma to and if conditions
+        // switft use comma to `and` if conditions
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {
             // pseudo random number generator (exclude upper bound)
             // need to convert int to unsigned int

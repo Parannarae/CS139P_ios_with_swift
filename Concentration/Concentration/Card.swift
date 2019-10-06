@@ -15,7 +15,7 @@ struct Card
     // identifier is not containing an emoji information since model should be UI independent
     var identifier: Int
     
-    // Card does not understance this, but type Card understand static
+    // Card instance does not understance this, but type Card understand static
     static var identifierFactory = 0
     static func getUniqueIdentifier() -> Int {
         // since we are already in static method, Card does not has to be added to access its static method like Card.identifierFactory

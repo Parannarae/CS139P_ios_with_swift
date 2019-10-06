@@ -26,7 +26,7 @@ class Concentration
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
                 }
-                // open up the card and set there is no card is opened
+                // open up the card and reset the previously opened card
                 cards[index].isFaceUp = true
                 indexOfOneAndOnlyFaceUpcard = nil
             } else {
