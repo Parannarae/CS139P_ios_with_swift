@@ -8,13 +8,19 @@
 
 import Foundation
 
-struct Card
+// inherit Hashable to use as a key of a dictionary
+struct Card: Hashable
 {
+    var hashValue: Int { return identifier }
+    
+    static func ==(lhs: Card, rhs: Card) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
+    
     var isFaceUp = false
     var isMatched = false
-    // identifier is not containing an emoji information since model should be UI independent
-    // - needs to be public unless view controller does not know if two cards are matched
-    var identifier: Int
+    // since view is not using it any more, make it private
+    private var identifier: Int
     
     // Card instance does not understance this, but type Card understand static
     private static var identifierFactory = 0

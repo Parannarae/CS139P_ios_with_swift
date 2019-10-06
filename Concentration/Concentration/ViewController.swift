@@ -61,25 +61,17 @@ class ViewController: UIViewController
     
     private var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
     
-    // dictionary Dictionary<Int, String>
-    private var emoji = [Int: String]()
+    private var emoji = [Card: String]()
     
     private func emoji(for card: Card) -> String {
         // switft use comma to `and` if conditions
-        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
+        if emoji[card] == nil, emojiChoices.count > 0 {
             // do not allow duplicate
-            emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4random)
+            emoji[card] = emojiChoices.remove(at: emojiChoices.count.arc4random)
             
         }
         
-        // dictionary returns optional
-//        if emoji[card.identifier] != nil {
-//            return emoji[card.identifier]!  // get actual value since we know it is set to something
-//        } else {
-//            return "?"
-//        }
-        // simpler syntax
-        return emoji[card.identifier] ?? "?"
+        return emoji[card] ?? "?"
     }
     
 }
