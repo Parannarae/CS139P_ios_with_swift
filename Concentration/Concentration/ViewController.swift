@@ -23,12 +23,27 @@ class ViewController: UIViewController
     
     private(set) var flipCount = 0 {
         didSet {
-            flipCountLabel.text = "Flips: \(flipCount)"
+            updateFlipCountLabel()
         }
+    }
+    
+    private func updateFlipCountLabel() {
+        // this does not invoked when it is initialized as 0
+        let attributes: [NSAttributedString.Key: Any] = [
+            .strokeWidth: 5.0,
+            .strokeColor: #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        ]
+        let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
+        flipCountLabel.attributedText = attributedString
     }
   
     // Outlet or Action always needs to be private
-    @IBOutlet private weak var flipCountLabel: UILabel!
+    @IBOutlet private weak var flipCountLabel: UILabel! {
+        // when iOS connect view label with this outlet, didSet is called
+        didSet {
+            updateFlipCountLabel()
+        }
+    }
     
     @IBOutlet private var cardButtons: [UIButton]!
     
@@ -59,7 +74,9 @@ class ViewController: UIViewController
         }
     }
     
-    private var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
+//    private var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
+    // instead of Array, use String
+    private var emojiChoices = "🦇😱🙀😈🎃👻🍭🍬🍎🧙‍♀️"
     
     private var emoji = [Card: String]()
     
@@ -67,8 +84,10 @@ class ViewController: UIViewController
         // switft use comma to `and` if conditions
         if emoji[card] == nil, emojiChoices.count > 0 {
             // do not allow duplicate
-            emoji[card] = emojiChoices.remove(at: emojiChoices.count.arc4random)
-            
+            // this does not works since String cannot be index by int
+//            emoji[card] = emojiChoices.remove(at: emojiChoices.count.arc4random)
+            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4random)
+            emoji[card] = String(emojiChoices.remove(at: randomStringIndex)) // remove returns Character
         }
         
         return emoji[card] ?? "?"

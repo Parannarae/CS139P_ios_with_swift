@@ -17,19 +17,26 @@ class Concentration
     // optional to make the case when there is no card is opened yet
     private var indexOfOneAndOnlyFaceUpCard: Int? {
         get {
-            var foundIndex: Int?
-            for index in cards.indices {
-                if cards[index].isFaceUp {
-                    if foundIndex == nil {
-                        // no card is flipped yet
-                        foundIndex = index
-                    } else {
-                        // this is the second flipped card
-                        return nil
-                    }
-                }
-            }
-            return foundIndex
+            // use closure to make it cleaner
+//            let faceUpCardIndices = cards.indices.filter { cards[$0].isFaceUp } // Array of Arry.Index type is aliased into Int
+//            return faceUpCardIndices.count == 1 ? faceUpCardIndices.first : nil
+            // use extension
+            return cards.indices.filter { cards[$0].isFaceUp }.oneAndOnly
+
+            
+//            var foundIndex: Int?
+//            for index in cards.indices {
+//                if cards[index].isFaceUp {
+//                    if foundIndex == nil {
+//                        // no card is flipped yet
+//                        foundIndex = index
+//                    } else {
+//                        // this is the second flipped card
+//                        return nil
+//                    }
+//                }
+//            }
+//            return foundIndex
         }
         set {
             // if no argument is given, `newValue` is a default argument name
@@ -84,5 +91,13 @@ class Concentration
         }
         
         // TODO: Shuffle the cards
+    }
+}
+
+extension Collection {
+    // Element is a type of Generic type in Collection
+    var oneAndOnly: Element? {
+        // count, first are collection methods (since they are used in var in Collection, just can be called with just their name
+        return count == 1 ? first : nil
     }
 }
