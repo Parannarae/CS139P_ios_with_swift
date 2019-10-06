@@ -54,6 +54,7 @@ class Concentration
             cards += [card, card]
         }
         
-        // TODO: Shuffle the cards
+        // Shuffle the cards
+        cards.shuffle()
     }
 }

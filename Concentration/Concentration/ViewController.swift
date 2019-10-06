@@ -77,6 +77,13 @@ class ViewController: UIViewController
         return emoji[card.identifier] ?? "?"
     }
     
+    @IBAction func restartGame(_ sender: UIButton) {
+        // TODO: Need to reset emojiChoices
+        flipCount = 0
+        game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1 / 2))
+        // redraw the contents
+        updateViewFromModel()
+    }
 }
 
 
