@@ -14,13 +14,13 @@ class Concentration
     
     // to check the status of current game
     // optional to make the case when there is no card is opened yet
-    var indexOfOneAndOnlyFaceUpcard: Int?
+    var indexOfOneAndOnlyFaceUpCard: Int?
     
     func chooseCard(at index: Int) {
         // ignore card if it is already matched
         if !cards[index].isMatched {
             // second card is chosen
-            if let matchIndex = indexOfOneAndOnlyFaceUpcard, matchIndex != index {
+            if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
                 // check if cards match
                 if cards[matchIndex].identifier == cards[index].identifier {
                     cards[matchIndex].isMatched = true
@@ -28,14 +28,14 @@ class Concentration
                 }
                 // open up the card and reset the previously opened card
                 cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpcard = nil
+                indexOfOneAndOnlyFaceUpCard = nil
             } else {
                 // either no cards or 2 cards are face up
                 for flipDownIndex in cards.indices {
                     cards[flipDownIndex].isFaceUp = false
                 }
                 cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpcard = index
+                indexOfOneAndOnlyFaceUpCard = index
             }
         }
     }
