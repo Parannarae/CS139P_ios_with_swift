@@ -56,19 +56,30 @@ class ViewController: UIViewController
         }
     }
     
-    let emojiSet = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
+    let emojiThemeDict = [
+        "halloween": ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"],
+        "animal": ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯"],
+        "sport": ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🥏", "🎱", "🏓"],
+        "expression": ["😀", "😅", "😂", "🤣", "😇" ,"😍", "😘", "🤩", "😱", "🤔"],
+        "food": ["🌭", "🍔", "🍟", "🍕", "🥙", "🥗", "🥘" ,"🍝", "🍱", "🥟"],
+        "transport": ["🚗", "🚕", "🚌", "🛴", "🚲", "🛵", "🚃", "🚄", "✈️", "🚀", "⛴"]
+    ]
+    
     var emojiChoices: [String]!
     
     // dictionary Dictionary<Int, String>
     var emoji = [Int: String]()
     
     func bindCardWithEmoji() {
-        emojiChoices = emojiSet
+        // get random theme
+        let curThemeElement = emojiThemeDict.randomElement()!
+        print("\(curThemeElement.key) theme is chosen!")
+        emojiChoices = curThemeElement.value
         for card in game.cards {
             if emoji[card.identifier] == nil, emojiChoices.count > 0 {
                 // pseudo random number generator (exclude upper bound)
                 // need to convert int to unsigned int
-                let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
+                let randomIndex = emojiChoices.count.arc4random()
                 
                 // do not allow duplicate
                 emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
@@ -90,4 +101,8 @@ class ViewController: UIViewController
     }
 }
 
-
+extension Int {
+    func arc4random() -> Int{
+        return Int(arc4random_uniform(UInt32(self)))
+    }
+}
