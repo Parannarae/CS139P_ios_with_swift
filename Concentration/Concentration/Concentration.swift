@@ -44,13 +44,6 @@ class Concentration
         // countable range: `..<` = exclude last, `...` = include last
         for _ in 0..<numberOfPairsOfCards { // `_` means ignore it
             let card = Card()
-//            let matchingCard = card // since struct is pass by value, it creates another Card
-//            cards.append(card)
-//            cards.append(matchingCard)
-            
-//            cards.append(card)
-//            cards.append(card) // same as set matchingCard
-            
             cards += [card, card]
         }
         

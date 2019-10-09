@@ -10,9 +10,7 @@ import UIKit
 
 class ViewController: UIViewController
 {
-    // add 1 to round up for the odd number of cards
-    // lazy does not initialized before someone use it -> but no property observer can be lazy
-    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1 / 2))
+    var game: Concentration!
     
     var flipCount = 0 {
         didSet {
@@ -20,7 +18,11 @@ class ViewController: UIViewController
         }
     }
   
-    @IBOutlet weak var flipCountLabel: UILabel!
+    @IBOutlet weak var flipCountLabel: UILabel! {
+        didSet {
+            startNewGame()
+        }
+    }
     
     @IBOutlet var cardButtons: [UIButton]!
     
@@ -33,6 +35,10 @@ class ViewController: UIViewController
             print("chosen card was not in cardButtons")
         }
         
+    }
+    
+    @IBAction func restartGame(_ sender: UIButton) {
+        startNewGame()
     }
     
     func updateViewFromModel() {
@@ -50,37 +56,35 @@ class ViewController: UIViewController
         }
     }
     
-    var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
+    let emojiSet = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"]
+    var emojiChoices: [String]!
     
     // dictionary Dictionary<Int, String>
     var emoji = [Int: String]()
     
-    func emoji(for card: Card) -> String {
-        // switft use comma to `and` if conditions
-        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
-            // pseudo random number generator (exclude upper bound)
-            // need to convert int to unsigned int
-            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
-            
-            // do not allow duplicate
-            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
-            
+    func bindCardWithEmoji() {
+        emojiChoices = emojiSet
+        for card in game.cards {
+            if emoji[card.identifier] == nil, emojiChoices.count > 0 {
+                // pseudo random number generator (exclude upper bound)
+                // need to convert int to unsigned int
+                let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
+                
+                // do not allow duplicate
+                emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+            }
         }
-        
-        // dictionary returns optional
-//        if emoji[card.identifier] != nil {
-//            return emoji[card.identifier]!  // get actual value since we know it is set to something
-//        } else {
-//            return "?"
-//        }
-        // simpler syntax
+    }
+    
+    func emoji(for card: Card) -> String {
         return emoji[card.identifier] ?? "?"
     }
     
-    @IBAction func restartGame(_ sender: UIButton) {
-        // TODO: Need to reset emojiChoices
+    func startNewGame() {
         flipCount = 0
-        game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1 / 2))
+        // add 1 to round up for the odd number of cards
+        game = Concentration(numberOfPairsOfCards: ((cardButtons.count + 1) / 2))
+        bindCardWithEmoji()
         // redraw the contents
         updateViewFromModel()
     }
