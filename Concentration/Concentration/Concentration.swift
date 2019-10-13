@@ -12,23 +12,24 @@ class Concentration
 {
     var cards = [Card]()
     var score = 0
-    var alreadySeenCardIdentifiers: [Int] = []
+    var alreadySeenCardIdentifiers: [Card] = []
     
     // to check the status of current game
     // optional to make the case when there is no card is opened yet
     var indexOfOneAndOnlyFaceUpCard: Int?
     
     func iSSeenBefore(card: Card) -> Bool {
-        // check if card is ever seen
-        if !alreadySeenCardIdentifiers.contains(card.identifier) {
-            alreadySeenCardIdentifiers.append(card.identifier)
+        // check if card is ever seen before
+        if !alreadySeenCardIdentifiers.contains(card) {
+            alreadySeenCardIdentifiers.append(card)
             return false
         }
-        
+
         return true
     }
     
     func penalize(card: Card) {
+        // score -1 if card is aleady seen before
         if iSSeenBefore(card: card) {
             score -= 1
         }
@@ -37,10 +38,10 @@ class Concentration
     func chooseCard(at index: Int) {
         // ignore card if it is already matched
         if !cards[index].isMatched {
-            // second card is chosen
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
+                // second card is chosen
                 // check if cards match
-                if cards[matchIndex].identifier == cards[index].identifier {
+                if cards[matchIndex] == cards[index] {
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
                     // increment score
@@ -55,6 +56,7 @@ class Concentration
             } else {
                 // either no cards or 2 cards are face up
                 for flipDownIndex in cards.indices {
+                    // reset all cards to be faced down for the case when two cards are already faced up
                     cards[flipDownIndex].isFaceUp = false
                 }
                 cards[index].isFaceUp = true
@@ -69,9 +71,6 @@ class Concentration
             let card = Card()
             cards += [card, card]
         }
-        
-        // reset score
-        score = 0
         
         // Shuffle the cards
         cards.shuffle()

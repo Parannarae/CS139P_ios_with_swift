@@ -79,7 +79,7 @@ class ViewController: UIViewController
     var emojiChoices: [String]!
     
     // dictionary Dictionary<Int, String>
-    var emoji = [Int: String]()
+    var emoji = [Card: String]()
     
     func bindCardWithEmoji() {
         // get random theme
@@ -87,19 +87,19 @@ class ViewController: UIViewController
         print("\(curThemeElement.key) theme is chosen!")
         emojiChoices = curThemeElement.value
         for card in game.cards {
-            if emoji[card.identifier] == nil, emojiChoices.count > 0 {
+            if emoji[card] == nil, emojiChoices.count > 0 {
                 // pseudo random number generator (exclude upper bound)
                 // need to convert int to unsigned int
                 let randomIndex = emojiChoices.count.arc4random()
                 
                 // do not allow duplicate
-                emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+                emoji[card] = emojiChoices.remove(at: randomIndex)
             }
         }
     }
     
     func emoji(for card: Card) -> String {
-        return emoji[card.identifier] ?? "?"
+        return emoji[card] ?? "?"
     }
     
     func startNewGame() {

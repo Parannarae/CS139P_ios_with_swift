@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Card
+struct Card: Hashable
 {
     var isFaceUp = false
     var isMatched = false
@@ -21,6 +21,17 @@ struct Card
         // since we are already in static method, Card does not has to be added to access its static method like Card.identifierFactory
         identifierFactory += 1
         return identifierFactory
+    }
+    
+    /*
+     Only use identifier to distinguish Card instance
+     */
+    static func ==(lhs:Card, rhs:Card) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identifier)
     }
     
     init() {
