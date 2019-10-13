@@ -10,14 +10,23 @@ import UIKit
 
 class ViewController: UIViewController
 {
-    var game: Concentration!
+    let emojiThemeDict = [  // possible card themes to choose
+        "halloween": ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"],
+        "animal": ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯"],
+        "sport": ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🥏", "🎱", "🏓"],
+        "expression": ["😀", "😅", "😂", "🤣", "😇" ,"😍", "😘", "🤩", "😱", "🤔"],
+        "food": ["🌭", "🍔", "🍟", "🍕", "🥙", "🥗", "🥘" ,"🍝", "🍱", "🥟"],
+        "transport": ["🚗", "🚕", "🚌", "🛴", "🚲", "🛵", "🚃", "🚄", "✈️", "⛴"]
+    ]
+    var emojiChoices: [String]!     // an Array of emoji to use for current game
+    var emoji = [Card: String]()    // a map of Card to emoji
     
+    var game: Concentration!
     var flipCount = 0 {
         didSet {
             flipCountLabel.text = "Flips: \(flipCount)"
         }
     }
-    
     var scoreCount = 0 {
         didSet {
             scoreLabel.text = "Score: \(scoreCount)"
@@ -44,14 +53,15 @@ class ViewController: UIViewController
         startNewGame()
     }
     
-    override func viewDidLoad() {
-        startNewGame()
-    }
-    
     func updateLabelValues() {
         // apply flip count and score
         flipCount = game.flipCount
         scoreCount = game.score
+    }
+    
+    func emoji(for card: Card) -> String {
+        // get associated emoji of card
+        return emoji[card] ?? "?"
     }
     
     func updateViewFromModel() {
@@ -68,26 +78,11 @@ class ViewController: UIViewController
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             }
         }
-        
         updateLabelValues()
     }
     
-    let emojiThemeDict = [
-        "halloween": ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "🧙‍♀️"],
-        "animal": ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯"],
-        "sport": ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🥏", "🎱", "🏓"],
-        "expression": ["😀", "😅", "😂", "🤣", "😇" ,"😍", "😘", "🤩", "😱", "🤔"],
-        "food": ["🌭", "🍔", "🍟", "🍕", "🥙", "🥗", "🥘" ,"🍝", "🍱", "🥟"],
-        "transport": ["🚗", "🚕", "🚌", "🛴", "🚲", "🛵", "🚃", "🚄", "✈️", "🚀", "⛴"]
-    ]
-    
-    var emojiChoices: [String]!
-    
-    // dictionary Dictionary<Int, String>
-    var emoji = [Card: String]()
-    
     func bindCardWithEmoji() {
-        // get random theme
+        // get random theme and assign an emoji to each card pair
         let curThemeElement = emojiThemeDict.randomElement()!
         emojiChoices = curThemeElement.value
         for card in game.cards {
@@ -101,12 +96,7 @@ class ViewController: UIViewController
             }
         }
     }
-    
-    func emoji(for card: Card) -> String {
-        // get associated emoji of card
-        return emoji[card] ?? "?"
-    }
-    
+
     func startNewGame() {
         // initialize a game
         // add 1 to round up for the odd number of cards
@@ -117,6 +107,10 @@ class ViewController: UIViewController
         
         // redraw the contents
         updateViewFromModel()
+    }
+    
+    override func viewDidLoad() {
+        startNewGame()
     }
 }
 
