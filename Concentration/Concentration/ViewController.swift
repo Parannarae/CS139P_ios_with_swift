@@ -31,7 +31,6 @@ class ViewController: UIViewController
     @IBOutlet var cardButtons: [UIButton]!
     
     @IBAction func touchCard(_ sender: UIButton) {
-        flipCount += 1
         if let cardNumber  = cardButtons.firstIndex(of: sender) {
             game.chooseCard(at: cardNumber)
             updateViewFromModel() // model needs to make view to change
@@ -49,7 +48,14 @@ class ViewController: UIViewController
         startNewGame()
     }
     
+    func updateLabelValues() {
+        // apply flip count and score
+        flipCount = game.flipCount
+        scoreCount = game.score
+    }
+    
     func updateViewFromModel() {
+        // update card display
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game.cards[index]
@@ -63,8 +69,7 @@ class ViewController: UIViewController
             }
         }
         
-        // apply score
-        scoreCount = game.score
+        updateLabelValues()
     }
     
     let emojiThemeDict = [
@@ -84,7 +89,6 @@ class ViewController: UIViewController
     func bindCardWithEmoji() {
         // get random theme
         let curThemeElement = emojiThemeDict.randomElement()!
-        print("\(curThemeElement.key) theme is chosen!")
         emojiChoices = curThemeElement.value
         for card in game.cards {
             if emoji[card] == nil, emojiChoices.count > 0 {
@@ -99,15 +103,18 @@ class ViewController: UIViewController
     }
     
     func emoji(for card: Card) -> String {
+        // get associated emoji of card
         return emoji[card] ?? "?"
     }
     
     func startNewGame() {
-        flipCount = 0
-        scoreCount = 0
+        // initialize a game
         // add 1 to round up for the odd number of cards
         game = Concentration(numberOfPairsOfCards: ((cardButtons.count + 1) / 2))
+        
+        updateLabelValues()
         bindCardWithEmoji()
+        
         // redraw the contents
         updateViewFromModel()
     }
@@ -115,6 +122,7 @@ class ViewController: UIViewController
 
 extension Int {
     func arc4random() -> Int{
+        // get random integer from 0 upto self
         return Int(arc4random_uniform(UInt32(self)))
     }
 }

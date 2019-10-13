@@ -12,6 +12,7 @@ class Concentration
 {
     var cards = [Card]()
     var score = 0
+    var flipCount = 0
     var alreadySeenCardIdentifiers: [Card] = []
     
     // to check the status of current game
@@ -36,6 +37,8 @@ class Concentration
     }
     
     func chooseCard(at index: Int) {
+        flipCount += 1
+        
         // ignore card if it is already matched
         if !cards[index].isMatched {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
