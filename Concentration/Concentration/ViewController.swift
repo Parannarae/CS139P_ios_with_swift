@@ -17,12 +17,16 @@ class ViewController: UIViewController
             flipCountLabel.text = "Flips: \(flipCount)"
         }
     }
-  
-    @IBOutlet weak var flipCountLabel: UILabel! {
+    
+    var scoreCount = 0 {
         didSet {
-            startNewGame()
+            scoreLabel.text = "Score: \(scoreCount)"
         }
     }
+  
+    @IBOutlet weak var flipCountLabel: UILabel!
+    
+    @IBOutlet weak var scoreLabel: UILabel!
     
     @IBOutlet var cardButtons: [UIButton]!
     
@@ -41,6 +45,10 @@ class ViewController: UIViewController
         startNewGame()
     }
     
+    override func viewDidLoad() {
+        startNewGame()
+    }
+    
     func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
@@ -54,6 +62,9 @@ class ViewController: UIViewController
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             }
         }
+        
+        // apply score
+        scoreCount = game.score
     }
     
     let emojiThemeDict = [
@@ -93,6 +104,7 @@ class ViewController: UIViewController
     
     func startNewGame() {
         flipCount = 0
+        scoreCount = 0
         // add 1 to round up for the odd number of cards
         game = Concentration(numberOfPairsOfCards: ((cardButtons.count + 1) / 2))
         bindCardWithEmoji()
