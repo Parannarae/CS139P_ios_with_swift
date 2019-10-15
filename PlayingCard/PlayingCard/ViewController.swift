@@ -17,11 +17,11 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         // print 10 random card
-        for _ in 1...10 {
-            if let card = deck.draw() {
-                print("\(card)")
-            }
-        }
+//        for _ in 1...10 {
+//            if let card = deck.draw() {
+//                print("\(card)")
+//            }
+//        }
     }
 
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B8F39322355E00700D04EC6 /* PlayingCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8F39312355E00700D04EC6 /* PlayingCardView.swift */; };
 		9BCB4E402353090800289209 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCB4E3F2353090800289209 /* AppDelegate.swift */; };
 		9BCB4E422353090800289209 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCB4E412353090800289209 /* SceneDelegate.swift */; };
 		9BCB4E442353090800289209 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCB4E432353090800289209 /* ViewController.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9B8F39312355E00700D04EC6 /* PlayingCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingCardView.swift; sourceTree = "<group>"; };
 		9BCB4E3C2353090800289209 /* PlayingCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayingCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BCB4E3F2353090800289209 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9BCB4E412353090800289209 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 		9BCB4E3E2353090800289209 /* PlayingCard */ = {
 			isa = PBXGroup;
 			children = (
+				9B8F39312355E00700D04EC6 /* PlayingCardView.swift */,
 				9BCB4E532353092100289209 /* Supporting Files */,
 				9BCB4E412353090800289209 /* SceneDelegate.swift */,
 				9BCB4E432353090800289209 /* ViewController.swift */,
@@ -153,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BCB4E442353090800289209 /* ViewController.swift in Sources */,
+				9B8F39322355E00700D04EC6 /* PlayingCardView.swift in Sources */,
 				9BCB4E402353090800289209 /* AppDelegate.swift in Sources */,
 				9BCB4E5723530D4200289209 /* PlayingCardDeck.swift in Sources */,
 				9BCB4E552353095F00289209 /* PlayingCard.swift in Sources */,
