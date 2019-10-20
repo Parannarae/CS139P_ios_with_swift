@@ -15,22 +15,46 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Fqi-On-U1J" customClass="PlayingCardView" customModule="PlayingCard" customModuleProvider="target">
-                                <rect key="frame" x="16" y="44" width="343" height="734"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <view opaque="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Fqi-On-U1J" customClass="PlayingCardView" customModule="PlayingCard" customModuleProvider="target">
+                                <rect key="frame" x="16" y="136.66666666666669" width="343" height="548.66666666666652"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Fqi-On-U1J" secondAttribute="height" multiplier="5:8" id="4MM-Qb-u0s"/>
+                                    <constraint firstAttribute="width" priority="750" constant="800" id="fdp-nY-XMP"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="rank">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="suit" value="♣️"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="gnd-3v-h81" appends="YES" id="9dI-Ew-zUA"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Fqi-On-U1J" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="AfR-Xz-M83"/>
-                            <constraint firstItem="Fqi-On-U1J" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="CZF-B0-MMh"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Fqi-On-U1J" secondAttribute="trailing" constant="16" id="KCo-8U-Mk4"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Fqi-On-U1J" secondAttribute="bottom" id="ete-Yf-QmH"/>
+                            <constraint firstItem="Fqi-On-U1J" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="8cH-kA-D5a"/>
+                            <constraint firstItem="Fqi-On-U1J" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Cah-rW-4DZ"/>
+                            <constraint firstItem="Fqi-On-U1J" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="FXL-4U-iqr"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Fqi-On-U1J" secondAttribute="trailing" constant="16" id="VeJ-bx-9Iw"/>
+                            <constraint firstItem="Fqi-On-U1J" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="zLU-3t-2cS"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Fqi-On-U1J" secondAttribute="bottom" constant="16" id="zvh-a8-kai"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="playingCardView" destination="Fqi-On-U1J" id="5IK-XK-Ryk"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="gnd-3v-h81">
+                    <connections>
+                        <action selector="filpCard:" destination="BYZ-38-t0r" id="YlM-pJ-THm"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="138.40000000000001" y="89.408866995073893"/>
         </scene>
