@@ -16,8 +16,9 @@ class PlayingCardView: UIView
 {
     // rank and suit is not enum since it is general view who does not need to know about data
     // it is a controller's job to convert those
+    
+    // add this var to the storyborad inspector (to work with this, type should be set explicitly)
     @IBInspectable
-    // add this var to the storyborad inspector (to work with this, type should be set explicitly
     var rank: Int = 12 {
         // redraw when rank is changed
         // setNeedsLayout is required since we will have subViews, and they are needed to be re-arranged
