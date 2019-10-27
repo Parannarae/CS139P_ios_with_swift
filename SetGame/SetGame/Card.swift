@@ -9,7 +9,7 @@
 import Foundation
 
 
-class Card: Equatable {
+class Card: Equatable, CustomStringConvertible {
     let number: SetNumber
     let shape: SetShape
     let shading: SetShading
@@ -17,6 +17,10 @@ class Card: Equatable {
     
     var isSelected = false
     var isMatched = false
+    
+    var description: String {
+        return "Card: \(self.number)/\(self.shape)/\(self.shading)/\(self.color)"
+    }
     
     enum SetNumber: Int {
         case one = 1
