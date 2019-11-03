@@ -29,7 +29,23 @@ class CardBehavior: UIDynamicBehavior {
     
     private func push(_ item: UIDynamicItem) {
         let push = UIPushBehavior(items: [item], mode: .instantaneous)
-        push.angle = (2 * CGFloat.pi).arc4random    // to make all cards move differently
+//        push.angle = (2 * CGFloat.pi).arc4random    // to make all cards move differently
+        // push towards center
+        if let referenceBounds = dynamicAnimator?.referenceView?.bounds {
+            let center = CGPoint(x: referenceBounds.midX, y: referenceBounds.midY)
+            switch (item.center.x, item.center.y) {
+            case let (x, y) where x < center.x && y < center.y:
+                push.angle = (CGFloat.pi/2).arc4random
+            case let (x, y) where x > center.x && y < center.y:
+                push.angle = CGFloat.pi-(CGFloat.pi/2).arc4random
+            case let (x, y) where x < center.x && y > center.y:
+                push.angle = (-CGFloat.pi/2).arc4random
+            case let (x, y) where x > center.x && y > center.y:
+                push.angle = CGFloat.pi+(CGFloat.pi/2).arc4random
+            default:
+                push.angle = (CGFloat.pi*2).arc4random
+            }
+        }
         push.magnitude = CGFloat(1.0) + CGFloat(2.0).arc4random // random from 1 ~ 3
         push.action = { [unowned push, weak self] in
             // to clean up the memory (since push is done only once and stay in heap)
@@ -43,6 +59,12 @@ class CardBehavior: UIDynamicBehavior {
         collisionBehavior.addItem(item)
         itemBehavior.addItem(item)
         push(item)
+    }
+    
+    func removeItem(_ item: UIDynamicItem) {
+        collisionBehavior.removeItem(item)
+        itemBehavior.removeItem(item)
+        // push is automatically removed when it is used
     }
     
     override init() {

@@ -19,24 +19,6 @@ class ViewController: UIViewController {
     // dynamic animator
     lazy var animator = UIDynamicAnimator(referenceView: view)
     
-    // combine all behaviors to CardBehavior.swift
-    // var with closure
-//    lazy var collisionBehavior: UICollisionBehavior = {
-//        let behavior = UICollisionBehavior()
-//        behavior.translatesReferenceBoundsIntoBoundary = true // collision boundary to bound of this view
-//        animator.addBehavior(behavior)
-//        return behavior
-//    }()
-//
-//    // make card move around more (and do not rotate)
-//    lazy var itemBehavior: UIDynamicItemBehavior = {
-//        let behavior = UIDynamicItemBehavior()
-//        behavior.allowsRotation = false
-//        behavior.elasticity = 1.0   // do not lose momentum
-//        behavior.resistance = 0 // no friction
-//        animator.addBehavior(behavior)
-//        return behavior
-//    }()
     lazy var cardBehavior = CardBehavior(in: animator)
     
     override func viewDidLoad() {
@@ -56,25 +38,19 @@ class ViewController: UIViewController {
             // target: object to send gesture method when the action happens
             // #selector argument: name of a method (but only external method argument names (note that flipCard has no external argument name)
             cardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(flipCard(_:))))
-            // add cardView a collision behavior
-//            collisionBehavior.addItem(cardView)
-            // add custom behavior
-//            itemBehavior.addItem(cardView)
-            // let the card move by pushing it
-//            let push = UIPushBehavior(items: [cardView], mode: .instantaneous)
-//            push.angle = (2 * CGFloat.pi).arc4random    // to make all cards move differently
-//            push.magnitude = CGFloat(1.0) + CGFloat(2.0).arc4random // random from 1 ~ 3
-//            push.action = { [unowned push] in
-//                push.dynamicAnimator?.removeBehavior(push)  // to clean up the memory (since push is done only once and stay in heap)
-//            }
-//            animator.addBehavior(push)
             cardBehavior.addItem(cardView)
         }
     }
     
     // make it like a concentration game (matching cards)
     private var faceUpCardViews: [PlayingCardView] {
-        return cardViews.filter { $0.isFaceUp && !$0.isHidden }
+        return cardViews.filter {
+            $0.isFaceUp
+            && !$0.isHidden
+            // do not add cards to faceUpCardViews if it is in animation
+            && $0.transform != CGAffineTransform.identity.scaledBy(x: 3.0, y: 3.0)
+            && $0.alpha == 1
+        }
     }
     
     private var faceUpCardViewsMatch: Bool {
@@ -83,27 +59,37 @@ class ViewController: UIViewController {
             && faceUpCardViews[0].suit == faceUpCardViews[1].suit
     }
     
+    var lastChosenCardView: PlayingCardView?
+    
     @objc func flipCard(_ recognizer: UITapGestureRecognizer) {
         // flip on the card that is tapped
         switch recognizer.state {
         case .ended:
             // recognizer knows where (which view) the tap happends
-            if let chosenCardView = recognizer.view as? PlayingCardView {
+            // second condition is to prevent unpredicted behavior (choosing another cards while in animation)
+            //  - property (alpha) is set immediately even if animation takes some time to finish
+            if let chosenCardView = recognizer.view as? PlayingCardView, faceUpCardViews.count < 2 {
+                lastChosenCardView = chosenCardView
+                // stop moving when the card is chosen
+                cardBehavior.removeItem(chosenCardView)
                 // animate flipping
+                // change duration of the animation to a big number to check if there is unpredicted behavior
                 UIView.transition(
                     with: chosenCardView,
                     duration: 0.6,
                     options: [.transitionFlipFromLeft],
                     animations: { chosenCardView.isFaceUp = !chosenCardView.isFaceUp },
                     completion: { finished in
+                        // make faceUpCardViews constant while animate (since faceUpCardViews is a dynamic variable)
+                        let cardsToAnimate = self.faceUpCardViews
                         // it does not make memory cycle since self does not point to this closure (only Animator has it)
                         if self.faceUpCardViewsMatch {
                             // make cards big and shrink when two cards are matched
                             UIViewPropertyAnimator.runningPropertyAnimator(
-                                withDuration: 0.6,
+                                withDuration: 0.6, // 3.0,
                                 delay: 0,
                                 options: [],
-                                animations: { self.faceUpCardViews.forEach {
+                                animations: { cardsToAnimate.forEach {
                                         // make 3 times bigger
                                         $0.transform = CGAffineTransform.identity.scaledBy(x: 3.0, y: 3.0)
                                     }
@@ -114,14 +100,14 @@ class ViewController: UIViewController {
                                         withDuration: 0.75, // little extra time to resize from 3.0 -> 1.0 -> 0.1
                                         delay: 0,
                                         options: [],
-                                        animations: { self.faceUpCardViews.forEach {
+                                        animations: { cardsToAnimate.forEach {
                                                 // make 3 times bigger
                                                 $0.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
                                                 $0.alpha = 0
                                             }
                                         },
                                         completion: { position in
-                                            self.faceUpCardViews.forEach {
+                                            cardsToAnimate.forEach {
                                                 $0.isHidden = true  // view is hidden now
                                                 // just clean up the animation (to default)
                                                 $0.alpha = 1
@@ -131,15 +117,27 @@ class ViewController: UIViewController {
                                     )
                                 }
                             )
-                        } else if self.faceUpCardViews.count == 2 {
-                            // automatically flipped to back of the card if two are chosen
-                            self.faceUpCardViews.forEach { cardView in
-                                UIView.transition(
-                                    with: cardView,
-                                    duration: 0.6,
-                                    options: [.transitionFlipFromLeft],
-                                    animations: { cardView.isFaceUp = false }
-                                )
+                        } else if cardsToAnimate.count == 2 {
+                            // card chosen the first, and the second try to make a transition to both cards, so make sure that the transition only executed on the first chosen card
+                            if chosenCardView == self.lastChosenCardView {
+                                // automatically flipped to back of the card if two are chosen
+                                cardsToAnimate.forEach { cardView in
+                                    UIView.transition(
+                                        with: cardView,
+                                        duration: 0.6,
+                                        options: [.transitionFlipFromLeft],
+                                        animations: { cardView.isFaceUp = false },
+                                        completion: { finished in
+                                            // reset the animation when there is a match
+                                            self.cardBehavior.addItem(cardView)
+                                        }
+                                    )
+                                }
+                            }
+                        } else {
+                            if !chosenCardView.isFaceUp {
+                                // when no match occurs, so cards are flipped down, make another animation
+                                self.cardBehavior.addItem(chosenCardView) // no memory cycle
                             }
                         }
                         
